@@ -11,6 +11,8 @@ object frmTest: TfrmTest
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object lblTime: TLabel
@@ -68,5 +70,14 @@ object frmTest: TfrmTest
     Caption = 'btnStream'
     TabOrder = 3
     OnClick = btnStreamClick
+  end
+  object btnAsync: TButton
+    Left = 8
+    Top = 120
+    Width = 75
+    Height = 25
+    Caption = 'btnAsync'
+    TabOrder = 4
+    OnClick = btnAsyncClick
   end
 end
