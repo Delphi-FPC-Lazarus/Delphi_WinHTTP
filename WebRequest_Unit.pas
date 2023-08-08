@@ -1,7 +1,7 @@
 {
   WebSocket
 
-  Windows WebSocket Implementierung, https fähig
+  Windows WebSocket Implementierung, https fÃ¤hig
 
   --------------------------------------------------------------------
   This Source Code Form is subject to the terms of the Mozilla Public
@@ -109,15 +109,15 @@ type
 
     // Stream-Request
     // requeststream ist optional (nil, file oder memorystream)
-    // responsestream ist optional (nil, file oder memorystream), instanz muss aber hineinübergeben werden wenn man den body haben will
-    // das ermöglicht beim einem Download direkt in einen Filestream zu schreiben
+    // responsestream ist optional (nil, file oder memorystream), instanz muss aber hineinÃ¼bergeben werden wenn man den body haben will
+    // das ermÃ¶glicht beim einem Download direkt in einen Filestream zu schreiben
     function WebRequest_stream(const RequestUrl, ContentType: string;
       bPost, bInfinit: Boolean; RequestStream: TStream; ResponseStream: TStream;
       var ResponseType: string): Boolean;
 
     // XML-Request
     // requestxml ist optional
-    // requestxml ist optional, neue Instanz wird zurückgegeben
+    // requestxml ist optional, neue Instanz wird zurÃ¼ckgegeben
     function WebRequest_xml(const RequestUrl: string; bPost: Boolean;
       RequestXML: IXMLDocument; var ResponseXML: IXMLDocument): Boolean;
 
@@ -132,7 +132,7 @@ type
     procedure GetResponseType(var ResponseType: string);
     procedure GetResponseStream(ResponseStream: TStream);
 
-    // Optionale Responeinformationen (während Request abfragtbar)
+    // Optionale Responeinformationen (wÃ¤hrend Request abfragtbar)
     property OnReceive: TOnWebRequestEvent read getOnReceive write setOnReceive;
     property OnReceiveFinished: TOnWebRequestEventFinished
       read getOnReceiveFinished write setOnReceiveFinished;
@@ -157,7 +157,7 @@ const
   ciTimeoutReceive = 30000;
   ciTimeoutReceiveInfinite = -1;
 
-  // Maximale Fehlermeldungslänge wenn alles schief geht
+  // Maximale FehlermeldungslÃ¤nge wenn alles schief geht
   ciMaxErrorResponseMsgLen = 500;
 
   // Downloadstatusevent Intervall (in Bytes received)
@@ -174,7 +174,7 @@ begin
   inherited;
   fOnWebRequestEvent := nil;
   fOnWebRequestEventFinished := nil;
-  // Event kann von ausßen Belegt werden und wird dann aufgerufen
+  // Event kann von ausÃŸen Belegt werden und wird dann aufgerufen
 
   fStatus := StatusNone;
 
@@ -332,7 +332,7 @@ begin
       ResponseStream.CopyFrom(OleStream, OleStream.size);
       ResponseStream.Seek(0, TSeekOrigin.soBeginning);
 
-      // -> Meldung für Fehleranalyse
+      // -> Meldung fÃ¼r Fehleranalyse
       if ResponseStream.size > ciMaxErrorResponseMsgLen then
       begin
         setlength(aResposeMsg, ciMaxErrorResponseMsgLen);
@@ -371,9 +371,12 @@ begin
   fhttp.SetAutoLogonPolicy(AutoLogonPolicy_Never);
   if RequestUrl.Contains('https') then
   begin
-    // ACHTUNG: geht nicht unter Windows 7
-    fhttp.Option[WinHttpRequestOption_SecureProtocols] := SecureProtocol_TLS1 or
-      SecureProtocol_TLS1_1 or SecureProtocol_TLS1_2; // SecureProtocol_ALL;
+    // fhttp.Option[WinHttpRequestOption_SecureProtocols] := SecureProtocol_TLS1 or SecureProtocol_TLS1_1 or SecureProtocol_TLS1_2; // only windows10 up
+    // fhttp.Option[WinHttpRequestOption_SecureProtocols] := SecureProtocol_ALL;
+    // fhttp.Option[WinHttpRequestOption_SecureProtocols] := SecureProtocol_TLS1; // deactivated by default on windows 10 up
+    // fhttp.Option[WinHttpRequestOption_SecureProtocols] := SecureProtocol_TLS1_1; // deactivated by default on windows 10 up
+    fhttp.Option[WinHttpRequestOption_SecureProtocols] := SecureProtocol_TLS1_2; // only windows 10 up
+    // fhttp.Option[WinHttpRequestOption_SecureProtocols] := SecureProtocol_TLS1_3;  WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_3: u32 = 8192; (0x2000) // only windows11 up, still unofficial    
   end
   else
   begin
@@ -408,9 +411,9 @@ begin
     fhttp.SetRequestHeader('Content-Type', ContentType);
   end;
 
-  // Debuginformationen damit ich das zukünftig in der Serverstatistik zuordnen kann
-  // 'User-Agent' nicht überscheiben, beinhaltet per default client informationen
-  // 'Referer' kann dafür verwendet werden
+  // Debuginformationen damit ich das zukÃ¼nftig in der Serverstatistik zuordnen kann
+  // 'User-Agent' nicht Ã¼berscheiben, beinhaltet per default client informationen
+  // 'Referer' kann dafÃ¼r verwendet werden
   if length(fsReferer) > 0 then
   begin
     fhttp.SetRequestHeader('Referer', fsReferer);
@@ -446,13 +449,13 @@ begin
     // Das ist entweder nach dem SetTimeout() gesetzten Timeout (Exception)
     // oder WaitForResponse liefert ein true womit der Request erfolgreich abgeschlosen qwurde.
     // - idle, keine Last wenn keine Daten kommen
-    // - WaitForResponse ließt auch gleich die Response vom Socket (erzeugt wiederum etwas last)
+    // - WaitForResponse lieÃŸt auch gleich die Response vom Socket (erzeugt wiederum etwas last)
     while (not bHttpFinished) do
     begin
-      // Timeout in Sekunden, -1 für unendlich was hier aber ziemlich dämlich wäre
+      // Timeout in Sekunden, -1 fÃ¼r unendlich was hier aber ziemlich dÃ¤mlich wÃ¤re
       bHttpFinished := fhttp.WaitForResponse(1);
 
-      // httpevents wird über das Interface automatisch bedient
+      // httpevents wird Ã¼ber das Interface automatisch bedient
 
       if bHttpFinished = true then
       begin
@@ -509,10 +512,13 @@ begin
 
   fhttp.SetAutoLogonPolicy(AutoLogonPolicy_Never);
   if RequestUrl.Contains('https') then
-  begin
-    // ACHTUNG: geht nicht unter Windows 7
-    fhttp.Option[WinHttpRequestOption_SecureProtocols] := SecureProtocol_TLS1 or
-      SecureProtocol_TLS1_1 or SecureProtocol_TLS1_2; // SecureProtocol_ALL;
+  begin    
+    // fhttp.Option[WinHttpRequestOption_SecureProtocols] := SecureProtocol_TLS1 or SecureProtocol_TLS1_1 or SecureProtocol_TLS1_2; // only windows10 up
+    // fhttp.Option[WinHttpRequestOption_SecureProtocols] := SecureProtocol_ALL;
+    // fhttp.Option[WinHttpRequestOption_SecureProtocols] := SecureProtocol_TLS1; // deactivated by default on windows 10 up
+    // fhttp.Option[WinHttpRequestOption_SecureProtocols] := SecureProtocol_TLS1_1; // deactivated by default on windows 10 up
+    fhttp.Option[WinHttpRequestOption_SecureProtocols] := SecureProtocol_TLS1_2; // only windows 10 up
+    // fhttp.Option[WinHttpRequestOption_SecureProtocols] := SecureProtocol_TLS1_3;  WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_3: u32 = 8192; (0x2000) // only windows11 up, still unofficial    
   end
   else
   begin
@@ -547,9 +553,9 @@ begin
     fhttp.SetRequestHeader('Content-Type', ContentType);
   end;
 
-  // Debuginformationen damit ich das zukünftig in der Serverstatistik zuordnen kann
-  // 'User-Agent' nicht überscheiben, beinhaltet per default client informationen
-  // 'Referer' kann dafür verwendet werden
+  // Debuginformationen damit ich das zukÃ¼nftig in der Serverstatistik zuordnen kann
+  // 'User-Agent' nicht Ã¼berscheiben, beinhaltet per default client informationen
+  // 'Referer' kann dafÃ¼r verwendet werden
   if length(fsReferer) > 0 then
   begin
     fhttp.SetRequestHeader('Referer', fsReferer);
