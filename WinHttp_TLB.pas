@@ -107,6 +107,7 @@ const
   SecureProtocol_TLS1 = $00000080;
   SecureProtocol_TLS1_1 = $00000200;
   SecureProtocol_TLS1_2 = $00000800;
+  SecureProtocol_TLS1_3 = $00002000; //  WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_3 = 0x2000  not official but seems to be working on Windows 11 
   SecureProtocol_ALL = $000000A8;
 
 type
